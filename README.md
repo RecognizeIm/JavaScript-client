@@ -4,7 +4,7 @@ Recognize.im API client for JavaScript.
 Recognize.im API
 ===============
 
-Recognize.im is providing API for Image Recognition. This module is a sample JavaScript connector to the API, which allows to query the Recognize.im API using a mobile web browser.
+Recognize.im provides API for Image Recognition. This module is a sample JavaScript connector to the API, which allows to query the Recognize.im API using a mobile web browser.
 
 Installation
 ============
