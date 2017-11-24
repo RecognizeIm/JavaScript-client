@@ -1,7 +1,7 @@
 window.RecognizeIm = function(opt) {
 	opt = opt || {};
 	
-	var API_URL = opt.apiUrl || 'https://recognize.im/';
+	var API_URL = opt.apiUrl || 'https://api.recognize.im/';
 	var API_CLIENT_ID = opt.clientId;
 	var API_KEY = opt.key;
 	var API_MODE = opt.mode || 'single';
