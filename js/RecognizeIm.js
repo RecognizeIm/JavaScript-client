@@ -54,6 +54,7 @@ window.RecognizeIm = function(opt) {
 		ajax.open("POST", getEndpointUrl(), true);
 		ajax.setRequestHeader('x-itraff-hash', hash);
 		ajax.setRequestHeader('Content-Type', 'image/jpeg');
+		ajax.setRequestHeader('Content-Transfer-Encoding', 'base64');
 
 		//Send the request.
 		ajax.onreadystatechange = function() {
