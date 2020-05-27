@@ -1,3 +1,7 @@
+/**
+ * The Recognize.im API connector.
+ * Forms and sends recognition requests and returns their results.
+ */
 window.RecognizeIm = function(opt) {
 	opt = opt || {};
 	
@@ -39,7 +43,6 @@ window.RecognizeIm = function(opt) {
 	}
 	
 	function debug(text) {
-		//FIXME handle multiple arguments
 		if (DEBUG) {
 			return console.debug('[RecognizeIm]', text); 
 		}

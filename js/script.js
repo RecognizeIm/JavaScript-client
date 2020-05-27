@@ -1,3 +1,15 @@
+/**
+ * The mainframe of Recognize.im API requests sender.
+ * To be used as a starting point of your own developments.
+ *
+ * The script sets the user credentials and API connector settings.
+ * It captures and scales the image and invokes the Recognize.im API connector that forms and sends the request.
+ * Finally, the results or error messages are displayed.
+ *
+ * NOTE:
+ * In your own implementations, make sure you don't hardcode your credentials or any other sensitive data into JS files.
+ * This would expose your credentials, as every JS must be sent to your user's browser.
+ */
 (function(){
 	var turnOnBtn = document.querySelector('#camera');
 	var captureBtn = document.querySelector('#capture');
@@ -25,23 +37,26 @@
 
 		var videoElement = document.querySelector('video');
 
-		navigator.getUserMedia = navigator.getUserMedia ||
-			navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.mediaDevices.getUserMedia;
-
-		var rearCameraId;
-
-		if (navigator.mediaDevices === undefined ||
-			navigator.mediaDevices.enumerateDevices === undefined) {
-			alert('This browser does not seem to support MediaStreamTrack.\n\nTry Chrome.');
+		/* Option 1: Simple camera accessing. */
+		/*
+		if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+			navigator.mediaDevices.getUserMedia({video: true}).then(successCallback, errorCallback);
 		} else {
+			alert('This browser does not seem to support media devices.');
+		}
+		*/
+
+		/* Option 2: Camera accessing with a camera selector (mobile devices usually have more cameras). */
+		var rearCameraId;
+		if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 			navigator.mediaDevices.enumerateDevices()
 				.then(function(devices) {
 					devices.forEach(function(device) {
 						if (device.kind == 'videoinput') {
-							if (device.label.indexOf('back') > -1) {
+							if (device.label.indexOf('back') > -1) {	//use the rear (back) camera
 								rearCameraId = device.deviceId;
 							}
-							// alert(device.kind + ": " + device.label + " id = " + device.deviceId);
+							//alert(device.kind + ": " + device.label + " id = " + device.deviceId);
 						}
 					});
 
@@ -60,18 +75,22 @@
 							]
 						}
 					};
-					navigator.getUserMedia(constraints, successCallback, errorCallback);
+					navigator.mediaDevices.getUserMedia(constraints).then(successCallback, errorCallback);
 				})
 				.catch(function(err) {
 					alert(err.name + ": " + error.message);
 				});
+		} else {
+			alert('This browser does not seem to support media devices.');
 		}
 
 		function successCallback(stream) {
 			videoStatus = true;
-			window.stream = stream; // make stream available to console
-			videoElement.src = window.URL.createObjectURL(stream);
-			videoElement.play();
+			video.srcObject = stream;
+			video.setAttribute('autoplay', '');
+			video.setAttribute('muted', '');
+			video.setAttribute('playsinline', '');
+			video.play();
 		}
 
 		function errorCallback(error) {
@@ -80,7 +99,16 @@
 		}
 	});
 
+	/**
+	 * Image capture event.
+	 * Handles taking picture, sending it to the Recognize.im API and displaying the results.
+	 */
 	captureBtn.addEventListener('click', function(e){
+		if (apiClientId.value.trim() === "" || apiKey.value.trim() === "") {
+			alert('Please set your credentials.\nCheck your Recognize.im account to get them.');
+			return;
+		}
+
 		if (videoStatus) {
 			var imageBase64 = capture(apiScale.value);
 		} else {
@@ -94,8 +122,8 @@
 		} else {
 			//Recognize.im API options.
 			var apiOpt = {
-				clientId: apiClientId.value,
-				key: apiKey.value,
+				clientId: apiClientId.value.trim(),
+				key: apiKey.value.trim(),
 				mode: apiMode.options[apiMode.selectedIndex].value,
 				allResults: apiIsAll.options[apiIsAll.selectedIndex].value === "all",
 				debug: true,
@@ -117,6 +145,17 @@
 		}
 	});
 
+	/**
+	 * Scrolls to the statusBox when picture taken.
+	 */
+	captureBtn.addEventListener('click', function(){
+		var target = document.querySelector('#statusBox');
+		target.scrollIntoView();
+	});
+
+	/**
+	 * Captures the image and scales it to desired size.
+	 */
 	function capture(scale) {
 		var width = video.videoWidth;
 		var height = video.videoHeight;
