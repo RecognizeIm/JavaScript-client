@@ -11,12 +11,12 @@ a:focus,
 a:hover
 {
 	text-decoration: none;
-	color: #00a5ff;
+	color: #00bdf2;
 }
 a:focus,
 a:hover
 {
-	color: #038fff;
+	color: #00a1dc;
 }
 
 .logo
@@ -58,12 +58,12 @@ button:active,
 button:visited
 {
 	color: #fff;
-	background-color: #00a5ff;
+	background-color: #00bdf2;
 }
 button:focus,
 button:hover
 {
-	background-color: #038fff;
+	background-color: #00a1dc;
 }
 
 #canvas
